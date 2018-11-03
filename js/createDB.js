@@ -4,9 +4,7 @@ app.controller('myController', ['$scope', '$window', function ($scope, $window) 
     $scope.createPrimary = true;
     $scope.createFilegroup = false;
     $scope.createLog = true;
-
-    $scope.typeStorage = ["KB", "MB", "GB", "%"];
-
+    $scope.arrTS = ["KB", "MB", "GB", "%"];
     $scope.dbInfo = {
         dbName: 'DemoName',
         primaryInfo: {
@@ -44,7 +42,7 @@ app.controller('myController', ['$scope', '$window', function ($scope, $window) 
         if ($scope.dbInfo.dbName == '') {
             return false;
         }
-        var result = false;
+        var result = !$scope.createPrimary;
         var dbInfo = angular.element(document.body).scope().dbInfo;
         if ($scope.createPrimary) {
             result = !Object.values(dbInfo.primaryInfo).includes(null) && !Object.values(dbInfo.primaryInfo).includes('');
@@ -133,3 +131,8 @@ LOG ON(
 //     }
 //     document.getElementById('LcodeSQL').innerHTML = sql;
 // }
+// 
+// 
+// 
+// 
+// Hello
