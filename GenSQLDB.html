@@ -99,7 +99,7 @@
 						<label for="Size">Nhập Size:
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">MB</span>
+									<select class="custom-select" ng-options="x in dbInfo.dbName"></select>
 								</div>
 								<input type="number" class="form-control" id="Pr_Size" ng-model="dbInfo.primaryInfo.primarySize">
 							</div>
