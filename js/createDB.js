@@ -54,61 +54,59 @@ app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) 
         return result;
     };
     $scope.genCode = function () {
-        
+
         var dbInfo = $scope.dbInfo;
-        var finalCode = `USE MASTER
-GO
-IF EXISTS(SELECT * FROM MASTER ..SysDatabases WHERE NAME = '${dbInfo.dbName}')
-DROP DATABASE ${dbInfo.dbName}
-GO
--- CREATE DATABASE
-CREATE DATABASE ${dbInfo.dbName}
-`;
+        var finalCode = 'USE MASTER\nGO';
+        finalCode += `\n--Kiểm tra xem database có tồn tại chưa, nếu có, xóa nó`
+        finalCode += `\nIF EXISTS(SELECT * FROM MASTER ..SysDatabases WHERE NAME = '${dbInfo.dbName}')`;
+        finalCode += `\nDROP DATABASE ${dbInfo.dbName}`;
+        finalCode += `\n-- CREATE DATABASE`;
+        finalCode += `\nCREATE DATABASE ${dbInfo.dbName}\n`;
+
         if ($scope.createPrimary) {
             var primaryInfo = dbInfo.primaryInfo;
-            var primaryCode = `--Tạo Primary
-ON PRIMARY(
-    NAME = ${primaryInfo.primaryName}_dat,
-    FILENAME = N'C:\\Program Files\\Microsoft SQL Server\\MSSQL14.MSSQLSERVER\\MSSQL\\DATA\\${primaryInfo.primaryName}_dat.mdf',
-    SIZE = ${primaryInfo.primarySize}${primaryInfo.primarySizeType},
-    MAXSIZE = ${primaryInfo.primaryMaxSize}${primaryInfo.primaryMaxSizeType},
-    FILEGROWTH = ${primaryInfo.primaryGrowth}${primaryInfo.primaryGrowthType})`;
+            var primaryCode = `--Tạo Primary ${primaryInfo.primaryName}\nON PRIMARY(`;
+            primaryCode += `\n\tNAME = ${primaryInfo.primaryName}_dat,`;
+            primaryCode += `\n\tFILENAME = N'C:\\Program Files\\Microsoft SQL Server\\MSSQL14.MSSQLSERVER\\MSSQL\\DATA\\${primaryInfo.primaryName}_dat.mdf',`;
+            primaryCode += `\n\tSIZE = ${primaryInfo.primarySize}${primaryInfo.primarySizeType},`;
+            primaryCode += `\n\tMAXSIZE = ${primaryInfo.primaryMaxSize}${primaryInfo.primaryMaxSizeType},`;
+            primaryCode += `\n\tFILEGROWTH = ${primaryInfo.primaryGrowth}${primaryInfo.primaryGrowthType})`;
+
             finalCode += primaryCode;
             if ($scope.createFilegroup) {
                 var filegroupInfo = dbInfo.filegroupInfo;
 
-                var fileGroupCode = `,
---Tạo FileGroup ${filegroupInfo.filegroupName}
-    FILEGROUP ${filegroupInfo.filegroupName}(
-    NAME = ${filegroupInfo.filegroupName},
-    FILENAME = N'C:\\Program Files\\Microsoft SQL Server\\MSSQL14.MSSQLSERVER\\MSSQL\\DATA\\${filegroupInfo.filegroupName}_group.ndf',
-    SIZE = ${filegroupInfo.filegroupSize}${filegroupInfo.filegroupSizeType},
-    MAXSIZE = ${filegroupInfo.filegroupMaxSize}${filegroupInfo.filegroupMaxSizeType},
-    FILEGROWTH = ${filegroupInfo.filegroupGrowth}${filegroupInfo.filegroupGrowthType})`
+                var fileGroupCode = `,\n--Tạo FileGroup ${filegroupInfo.filegroupName}`;
+                fileGroupCode += `\nFILEGROUP ${filegroupInfo.filegroupName}(`;
+                fileGroupCode += `\n\tNAME = ${filegroupInfo.filegroupName},`;
+                fileGroupCode += `\n\tFILENAME = N'C:\\Program Files\\Microsoft SQL Server\\MSSQL14.MSSQLSERVER\\MSSQL\\DATA\\${filegroupInfo.filegroupName}_group.ndf',`;
+                fileGroupCode += `\n\tSIZE = ${filegroupInfo.filegroupSize}${filegroupInfo.filegroupSizeType},`;
+                fileGroupCode += `\n\tMAXSIZE = ${filegroupInfo.filegroupMaxSize}${filegroupInfo.filegroupMaxSizeType},`;
+                fileGroupCode += `\n\tFILEGROWTH = ${filegroupInfo.filegroupGrowth}${filegroupInfo.filegroupGrowthType})`;
+
                 finalCode += fileGroupCode;
             }
             if ($scope.createLog) {
                 var logInfo = dbInfo.logInfo;
-                var logCode = `
---Tạo Log ${logInfo.logName}
-LOG ON(
-    Name = ${logInfo.logName}_log,
-    FILENAME =  N'C:\\Program Files\\Microsoft SQL Server\\MSSQL14.MSSQLSERVER\\MSSQL\\DATA\\${logInfo.logName}_log.ldf',
-    SIZE = ${logInfo.logSize}${logInfo.logSizeType},
-    MAXSIZE = ${logInfo.logMaxSize}${logInfo.logMaxSizeType},
-    FILEGROWTH = ${logInfo.logGrowth}${logInfo.logGrowthType})`;
+                var logCode = `\n--Tạo Log ${logInfo.logName}\nLOG ON(`;
+                logCode += `\n\tName = ${logInfo.logName}_log,`;
+                logCode += `\n\tFILENAME =  N'C:\\Program Files\\Microsoft SQL Server\\MSSQL14.MSSQLSERVER\\MSSQL\\DATA\\${logInfo.logName}_log.ldf',`;
+                logCode += `\n\tSIZE = ${logInfo.logSize}${logInfo.logSizeType},`;
+                logCode += `\n\tMAXSIZE = ${logInfo.logMaxSize}${logInfo.logMaxSizeType},`;
+                logCode += `\n\tFILEGROWTH = ${logInfo.logGrowth}${logInfo.logGrowthType})`;
+
                 finalCode += logCode;
             }
         }
         finalCode += '\nGO\n';
         return finalCode;
     };
-    $scope.accInfo=$window.accInfo;
+    $scope.accInfo = $window.accInfo;
 }]);
 
 //JQuery
 $(document).ready(function () {
-    $("#copyButton").click(function () {      
+    $("#copyButton").click(function () {
         $("#code").select();
         document.execCommand('copy');
         alert("Copied");
