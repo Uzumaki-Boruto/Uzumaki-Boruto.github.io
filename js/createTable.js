@@ -2,13 +2,7 @@ var app = angular.module('App', []);
 
 app.controller('controller', function ($scope) {
 	$scope.selected = 0;
-	// $scope.check = function () {
-	// 	if ($scope.checkNULL == true) {
-	// 		$scope.cn = "NOT NULL,"
-	// 	} else {
-	// 		$scope.cn = ","
-	// 	}
-	// }
+
 	$scope.tdata = ["NVARCHAR", "INT", "DATETIME", "BOOLEAN", "DECIMAL"];
 	$scope.dbName = '';
 	$scope.countTable = 1;
@@ -112,21 +106,25 @@ GO`;
 			var tbCode = `\n--Create table ${table.tableName}
 CREATE TABLE ${table.tableName}(
 `;
+			var insertCode = `\n--INSERT INTO ${table.tableName}(`;
 			for (let i = 0; i < table.collumInfos.length; i++) {
 				const collum = table.collumInfos[i];
-				var colCode = `	${collum.collumName} ${collum.collumType == 'NVARCHAR' ? 'NVARCHAR(255)' : collum.collumType}`;
-				colCode += `${collum.allowNull ? '' : ' NOT NULL'}`
+				var colCode = `	[${collum.collumName}] ${collum.collumType == 'NVARCHAR' ? 'NVARCHAR(255)' : collum.collumType}`;
+				colCode += `${collum.allowNull ? '' : ' NOT NULL'}`;
+				insertCode += `[${collum.collumName}]`;
 				if (i != table.collumInfos.length - 1) {
 					colCode += ',\n';
+					insertCode += `, `;
 				}
 				else {
 					colCode += ')\nGO';
+					insertCode += `) VALUES\n--GO\n`;
 				}
 				tbCode += colCode;
 			}
 			finalCode += tbCode;
+			finalCode += insertCode;
 		});
 		return finalCode;
 	};
-
 });
