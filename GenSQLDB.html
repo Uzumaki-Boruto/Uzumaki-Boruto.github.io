@@ -10,29 +10,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+  <script src="js/accInfo.js"></script>
   <script src="js/createDB.js"></script>
   <title>Generate SQL Script</title>
-
 </head>
 
-<body ng-app="genSQLCode" ng-controller="myController">
-  <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="https://www.facebook.com/Boruto.Uzumaki.8299">Thông Hoàng &copy;</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+<body ng-app="genSQLCode">
+  <div ng-controller="checkControl" ng-init="testLogin()">    
+  </div>
+  <div ng-controller="ControllerDB">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="https://www.facebook.com/Boruto.Uzumaki.8299">Thông Hoàng &copy;</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
         aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="GenSQLDB.html">Tạo Database
+            <a class="nav-link" href="GenSQLDB.html?txtUser={{accInfo.username}}&txtPass={{accInfo.pass}}">Tạo Database
               <span class="sr-only">(current)</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="GenSQLTables.html">Tạo Table</a>
+            <a class="nav-link" href="GenSQLTables.html?txtUser={{accInfo.username}}&txtPass={{accInfo.pass}}">Tạo Table</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Tạo Stored Procedure</a>
@@ -251,6 +254,7 @@
       </div>
     </div>
   </div>
+</div>
 </body>
 
 </html>
