@@ -73,7 +73,7 @@
               </div>
               <div id='quanCol' class="form-group">
               </div>
-              <button type="button" class="btn btn-success" id="copyButton">Copy to clipboard >></button>
+              <button ng-if="validated()" type="button" class="btn btn-success" id="copyButton">Copy to clipboard</button>
             </div>
             <div class="card-footer">
               <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
@@ -129,9 +129,9 @@
                       </div>
                       <!-- <div class="col-1"></div> -->
                       <div class="col-2 text-right my-2" ng-if="collum.collumName"><br>
-                        <a class="btn btn-info" data-toggle="modal" data-target="#dialog{{$index}}">Advance</a>
-                      </div>
-                      <div id="dialog{{$index}}" class="modal fade" role="dialog">
+                        <a class="btn btn-info" data-toggle="modal" data-target="#dialog{{table.tableID}}_{{$index}}">Advance</a>
+                      
+                      <div id="dialog{{table.tableID}}_{{$index}}" class="modal fade" role="dialog">
                         <div class="modal-dialog">
                           <!-- Modal content-->
                           <div class="modal-content bg-info">
@@ -148,6 +148,17 @@
                                   <div class="col-lg-6">
                                     <label class='switch'>
                                       <input type="checkbox" ng-model="collum.identity">
+                                      <span class='slider round'></span>
+                                    </label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-lg-3">
+                                    <label>Unique </label>
+                                  </div>
+                                  <div class="col-lg-6">
+                                    <label class='switch'>
+                                      <input type="checkbox" ng-model="collum.unique">
                                       <span class='slider round'></span>
                                     </label>
                                   </div>
@@ -196,6 +207,7 @@
                           </div>
                         </div>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </div>
