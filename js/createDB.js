@@ -1,12 +1,8 @@
-var app = angular.module('genSQLCode', []);
-app.controller('myController', ['$scope', '$window', function ($scope, $window) {
-
+app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) {
     $scope.createPrimary = true;
     $scope.createFilegroup = false;
     $scope.createLog = true;
-
     $scope.typeStorage = ["KB", "MB", "GB", "%"];
-
     $scope.dbInfo = {
         dbName: 'DemoName',
         primaryInfo: {
@@ -45,7 +41,7 @@ app.controller('myController', ['$scope', '$window', function ($scope, $window) 
             return false;
         }
         var result = false;
-        var dbInfo = angular.element(document.body).scope().dbInfo;
+        var dbInfo = $scope.dbInfo;
         if ($scope.createPrimary) {
             result = !Object.values(dbInfo.primaryInfo).includes(null) && !Object.values(dbInfo.primaryInfo).includes('');
         }
@@ -58,8 +54,8 @@ app.controller('myController', ['$scope', '$window', function ($scope, $window) 
         return result;
     };
     $scope.genCode = function () {
-        var scope = angular.element(document.body).scope();
-        var dbInfo = scope.dbInfo;
+        
+        var dbInfo = $scope.dbInfo;
         var finalCode = `USE MASTER
 GO
 IF EXISTS(SELECT * FROM MASTER ..SysDatabases WHERE NAME = '${dbInfo.dbName}')
@@ -68,7 +64,7 @@ GO
 -- CREATE DATABASE
 CREATE DATABASE ${dbInfo.dbName}
 `;
-        if (scope.createPrimary) {
+        if ($scope.createPrimary) {
             var primaryInfo = dbInfo.primaryInfo;
             var primaryCode = `--Tạo Primary
 ON PRIMARY(
@@ -78,7 +74,7 @@ ON PRIMARY(
     MAXSIZE = ${primaryInfo.primaryMaxSize}${primaryInfo.primaryMaxSizeType},
     FILEGROWTH = ${primaryInfo.primaryGrowth}${primaryInfo.primaryGrowthType})`;
             finalCode += primaryCode;
-            if (scope.createFilegroup) {
+            if ($scope.createFilegroup) {
                 var filegroupInfo = dbInfo.filegroupInfo;
 
                 var fileGroupCode = `,
@@ -91,7 +87,7 @@ ON PRIMARY(
     FILEGROWTH = ${filegroupInfo.filegroupGrowth}${filegroupInfo.filegroupGrowthType})`
                 finalCode += fileGroupCode;
             }
-            if (scope.createLog) {
+            if ($scope.createLog) {
                 var logInfo = dbInfo.logInfo;
                 var logCode = `
 --Tạo Log ${logInfo.logName}
@@ -107,13 +103,14 @@ LOG ON(
         finalCode += '\nGO\n';
         return finalCode;
     };
+    $scope.accInfo=$window.accInfo;
 }]);
 
-//Javascript 
+//JQuery
 $(document).ready(function () {
     $("#copyButton").click(function () {
-        var scope = angular.element(document.body).scope();
-        if (!scope.validated()) {
+        
+        if (!$scope.validated()) {
             alert('Vui lòng điền đầy đủ thông tin để tạo bảng');
             return;
         }
@@ -122,27 +119,3 @@ $(document).ready(function () {
         alert("Copied");
     });
 });
-// function getData() {
-//     //vãi cả hard code
-//     var sql = document.getElementById('FcodeSQL').value;
-//     var index1 = sql.indexOf("-- Tạo Primary");
-//     var index2 = sql.indexOf("--Tạo FileGroup");
-//     var index3 = sql.indexOf("-- Tạo Log File");
-//     var index4 = sql.lastIndexOf("GO");
-//     var sqlPrimary = sql.substring(index1, index2);
-//     var sqlFileGroup = sql.substring(index2, index3);
-//     var sqlLogFile = sql.substring(index3, index4 + 2);
-//     var cb_Primary = document.getElementById('cb_Primary');
-//     var cb_FileGroup = document.getElementById('cb_FileGroup');
-//     var cb_Log = document.getElementById('cb_Log');
-//     if (cb_Primary.checked == false) {
-//         sql = sql.replace(sqlPrimary, "");
-//     }
-//     if (cb_FileGroup.checked == false) {
-//         sql = sql.replace(sqlFileGroup, "");
-//     }
-//     if (cb_Log.checked == false) {
-//         sql = sql.replace(sqlLogFile, "");
-//     }
-//     document.getElementById('LcodeSQL').innerHTML = sql;
-// }
