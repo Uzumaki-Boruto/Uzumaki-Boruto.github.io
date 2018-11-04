@@ -113,7 +113,7 @@
                   <div id="col">
                     <div class='form-group row' ng-repeat="collum in table.collumInfos">
                       <div class='col-6'>
-                        <label>Tên Cột:</label>
+                        <label>Tên Cột {{$index + 1}}:</label>
                         <input class='form-control mr-2' type='text' ng-model='collum.collumName'>
                       </div>
                       <div class='col-3'>
@@ -136,16 +136,58 @@
                           <!-- Modal content-->
                           <div class="modal-content bg-info">
                             <div class="modal-header">
-                              <h4 class="modal-title">Thiết lập nâng cao</h4>
+                              <h4 class="modal-title">Thiết lập nâng cao cột [{{collum.collumName}}]</h4>
                               <button type="button" class="close btn btn-danger" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
-                              <div ng-if="collum.collumType == 'INT'">
-                                <label>Identity</label>
-                                <label class='switch'>
-                                  <input type="checkbox" ng-model="collum.identity">
-                                  <span class='slider round'></span>
-                                </label>
+                              <div class="container">
+                                <div class="row" ng-if="collum.collumType == 'INT'">
+                                  <div class="col-lg-3">
+                                    <label>Identity </label>
+                                  </div>
+                                  <div class="col-lg-6">
+                                    <label class='switch'>
+                                      <input type="checkbox" ng-model="collum.identity">
+                                      <span class='slider round'></span>
+                                    </label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-lg-3">
+                                    <label>Primary Key</label>
+                                  </div>
+                                  <div class="col-lg-6">
+                                    <label class='switch'>
+                                      <input type="checkbox" ng-model="collum.primaryKey">
+                                      <span class='slider round'></span>
+                                    </label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-lg-3">
+                                    <label>Foreign Key</label>
+                                  </div>
+                                  <div class="col-lg-6">
+                                    <label class='switch'>
+                                      <input type="checkbox" ng-model="collum.foreignKey">
+                                      <span class='slider round'></span>
+                                    </label>
+                                  </div>
+                                  <div class="row container" ng-if="collum.foreignKey">
+                                    <div class="col-lg-6">
+                                      <div class="form-group">
+                                        <label>Tên bảng:</label>
+                                        <input class="form-control" type="text" ng-model="collum.referencesTo">
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <div class="form-group">
+                                        <label>Tên cột:</label>
+                                        <input class="form-control" type="text" ng-model="collum.referencesTable">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                             <div class="modal-footer">
