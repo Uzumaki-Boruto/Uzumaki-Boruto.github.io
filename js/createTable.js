@@ -1,9 +1,10 @@
 app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) {
 	$scope.selected = 0;
-	$scope.tdata = ["NVARCHAR", "INT", "DATETIME", "BOOLEAN", "DECIMAL"];
-	$scope.dbName = '';
 	$scope.countTable = 1;
 	$scope.countCollum = [1];
+
+	$scope.tdata = ["NVARCHAR", "INT", "BOOLEAN", "DECIMAL", "FLOAT", "DATETIME"];
+	$scope.dbName = '';
 	//tableInfos chứ id, name, và chứa thông tin cột
 	//Muốn trigger cái gì thì cứ việc ng-repeat cái này ra, auto có data
 	$scope.tableInfos = [{
@@ -14,6 +15,10 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 			collumName: '',
 			collumType: '',
 			identity: false,
+			primaryKey: false,
+			foreignKey: false,
+			referencesTo: '',
+			referencesTable: '',
 			allowNull: false,
 		}]
 	}];
@@ -32,6 +37,10 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 						collumName: '',
 						collumType: '',
 						identity: false,
+						primaryKey: false,
+						foreignKey: false,
+						referencesTo: '',
+						referencesTable: '',
 						allowNull: false,
 					}]
 				};
@@ -57,6 +66,10 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 					collumName: '',
 					collumType: '',
 					identity: false,
+					primaryKey: false,
+					foreignKey: false,
+					referencesTo: '',
+					referencesTable: '',
 					allowNull: false,
 				};
 				colInfos.push(obj);
@@ -73,15 +86,18 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 			return false;
 		}
 		var result = true;
-		$scope.tableInfos.forEach(element => {
-			if (element.tableName == null || element.tableName == '') {
+		$scope.tableInfos.forEach(tableInfo => {
+			if (tableInfo.tableName == null || tableInfo.tableName == '') {
 				result = false;
 			}
-			element.collumInfos.forEach(collumInfo => {
-				if (collumInfo.collumName == null || collumInfo.collumName == '') {
+			tableInfo.collumInfos.forEach(collumInfo => {
+				if (collumInfo.collumName == '') {
 					result = false;
 				}
 				if (collumInfo.collumType == null || collumInfo.collumType == '') {
+					result = false;
+				}
+				if (collumInfo.foreignKey && (collumInfo.referencesTo == '' || collumInfo.referencesTable == '')) {
 					result = false;
 				}
 			});
@@ -89,31 +105,39 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 		return result;
 	};
 	$scope.genCodeTable = function () {
-		var finalCode = `--Use ${$scope.dbName}
-		USE ${$scope.dbName}
-		GO`;
+		var finalCode = `--Use ${$scope.dbName}\nUSE [${$scope.dbName}]\nGO`;
+		var alterCode = "";
 		$scope.tableInfos.forEach(table => {
-		var tbCode = `\n--Create table ${table.tableName}
-		CREATE TABLE ${table.tableName}(
-			`;
+			var tbCode = `\n--Create table ${table.tableName}\nCREATE TABLE [${table.tableName}](\n`;
+			var insertCode = `\n--INSERT INTO [${table.tableName}](`;
 			for (let i = 0; i < table.collumInfos.length; i++) {
 				const collum = table.collumInfos[i];
-				var colCode = `	${collum.collumName} ${collum.collumType == 'NVARCHAR' ? 'NVARCHAR(255)' : collum.collumType}`;
-				colCode += `${collum.identity ? 'IDENTITY' : ''}`;
-				colCode += `${collum.allowNull ? '' : ' NOT NULL'}`
+				var colCode = `\t[${collum.collumName}] ${collum.collumType == 'NVARCHAR' ? 'NVARCHAR(255)' : collum.collumType}`;
+				colCode += `${collum.identity ? ' IDENTITY' : ''}`;
+				colCode += `${collum.allowNull ? '' : ' NOT NULL'}`;
+				if (collum.primaryKey) {
+					alterCode += `\n--Add primary key\nALTER [${table.tableName}]\n\tADD PRIMARY KEY ([${collum.collumName}])\nGO`;
+				}
+				if (collum.foreignKey) {
+					alterCode += `\n--Add foreign key\nALTER [${table.tableName}]\n\tADD FOREIGN KEY ([${collum.collumName}]) REFERENCES [${collum.referencesTo}]([${collum.referencesTable}])\nGO`;
+				}
 				if (i != table.collumInfos.length - 1) {
 					colCode += ',\n';
+					insertCode += `[${collum.collumName}], `;
 				}
 				else {
 					colCode += ')\nGO';
+					insertCode += `[${collum.collumName}]) VALUES `;
 				}
 				tbCode += colCode;
 			}
+			tbCode += insertCode;
 			finalCode += tbCode;
 		});
+		finalCode += alterCode;
 		return finalCode;
 	};
-	$scope.accInfo=$window.accInfo;
+	$scope.accInfo = $window.accInfo;
 }]);
 
 //JAVa script
