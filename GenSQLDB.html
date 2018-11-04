@@ -81,7 +81,7 @@
                 <span class="slider round"></span>
               </label>
             </div>
-            <button type="button" class="btn btn-success" id="copyButton">Copy To Clipboard</button>
+            <button type="button" class="btn btn-success" id="copyButton" ng-if="validated()">Copy To Clipboard</button>
           </div>
           <div class="card-footer">
             <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
@@ -106,7 +106,7 @@
                     <select class="custom-select" ng-model="dbInfo.primaryInfo.primarySizeType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Pr_Size" ng-model="dbInfo.primaryInfo.primarySize">
+                  <input type="number" min="1" class="form-control" id="Pr_Size" ng-model="dbInfo.primaryInfo.primarySize">
                 </div>
               </label>
             </div>
@@ -117,7 +117,7 @@
                     <select class="custom-select" ng-model="dbInfo.primaryInfo.primaryMaxSizeType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Pr_MaxSize" ng-model="dbInfo.primaryInfo.primaryMaxSize">
+                  <input type="number" min="1" class="form-control" id="Pr_MaxSize" ng-model="dbInfo.primaryInfo.primaryMaxSize">
                 </div>
               </label>
             </div>
@@ -128,7 +128,7 @@
                     <select class="custom-select" ng-model="dbInfo.primaryInfo.primaryGrowthType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Pr_SizeGrowth" ng-model="dbInfo.primaryInfo.primaryGrowth">
+                  <input type="number" min="1" class="form-control" id="Pr_SizeGrowth" ng-model="dbInfo.primaryInfo.primaryGrowth">
                 </div>
               </label>
             </div>
@@ -155,7 +155,7 @@
                     <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupSizeType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Fg_Size" ng-model="dbInfo.filegroupInfo.filegroupSize">
+                  <input type="number" min="1" class="form-control" id="Fg_Size" ng-model="dbInfo.filegroupInfo.filegroupSize">
                 </div>
               </label>
             </div>
@@ -166,7 +166,7 @@
                     <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupMaxSizeType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Fg_MaxSize" ng-model="dbInfo.filegroupInfo.filegroupMaxSize">
+                  <input type="number" min="1" class="form-control" id="Fg_MaxSize" ng-model="dbInfo.filegroupInfo.filegroupMaxSize">
                 </div>
               </label>
             </div>
@@ -177,7 +177,7 @@
                     <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupGrowthType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Fg_SizeGrowth" ng-model="dbInfo.filegroupInfo.filegroupGrowth">
+                  <input type="number" min="1" class="form-control" id="Fg_SizeGrowth" ng-model="dbInfo.filegroupInfo.filegroupGrowth">
                 </div>
               </label>
             </div>
@@ -204,7 +204,7 @@
                     <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Lg_Size" ng-model="dbInfo.logInfo.logSize">
+                  <input type="number" min="1" class="form-control" id="Lg_Size" ng-model="dbInfo.logInfo.logSize">
                 </div>
               </label>
             </div>
@@ -215,7 +215,7 @@
                     <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Lg_MaxSize" ng-model="dbInfo.logInfo.logMaxSize">
+                  <input type="number" min="1" class="form-control" id="Lg_MaxSize" ng-model="dbInfo.logInfo.logMaxSize">
                 </div>
               </label>
             </div>
@@ -226,7 +226,7 @@
                     <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType" ng-options="option for option in typeStorage">
                     </select>
                   </div>
-                  <input type="number" class="form-control" id="Lg_SizeGrowth" ng-model="dbInfo.logInfo.logGrowth">
+                  <input type="number" min="1" class="form-control" id="Lg_SizeGrowth" ng-model="dbInfo.logInfo.logGrowth">
                 </div>
               </label>
             </div>
