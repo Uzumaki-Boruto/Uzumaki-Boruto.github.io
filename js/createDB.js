@@ -62,7 +62,7 @@ app.controller('myController', ['$scope', '$window', function ($scope, $window) 
         var dbInfo = scope.dbInfo;
         var finalCode = `USE MASTER
 GO
-IF EXISTS(SELECT * FROM MASTER ..SysDatabases WHERE NAME = ${dbInfo.dbName}')
+IF EXISTS(SELECT * FROM MASTER ..SysDatabases WHERE NAME = '${dbInfo.dbName}')
 DROP DATABASE ${dbInfo.dbName}
 GO
 -- CREATE DATABASE
@@ -96,7 +96,7 @@ ON PRIMARY(
                 var logCode = `
 --Tạo Log ${logInfo.logName}
 LOG ON(
-    Name = DemoName_log,
+    Name = ${logInfo.logName}_log,
     FILENAME =  N'C:\\Program Files\\Microsoft SQL Server\\MSSQL14.MSSQLSERVER\\MSSQL\\DATA\\${logInfo.logName}_log.ldf',
     SIZE = ${logInfo.logSize}${logInfo.logSizeType},
     MAXSIZE = ${logInfo.logMaxSize}${logInfo.logMaxSizeType},
@@ -108,7 +108,20 @@ LOG ON(
         return finalCode;
     };
 }]);
+
 //Javascript 
+$(document).ready(function () {
+    $("#copyButton").click(function () {
+        var scope = angular.element(document.body).scope();
+        if (!scope.validated()) {
+            alert('Vui lòng điền đầy đủ thông tin để tạo bảng');
+            return;
+        }
+        $("#code").select();
+        document.execCommand('copy');
+        alert("Copied");
+    });
+});
 // function getData() {
 //     //vãi cả hard code
 //     var sql = document.getElementById('FcodeSQL').value;
