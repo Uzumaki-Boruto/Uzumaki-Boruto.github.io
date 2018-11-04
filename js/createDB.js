@@ -4,9 +4,7 @@ app.controller('myController', ['$scope', '$window', function ($scope, $window) 
     $scope.createPrimary = true;
     $scope.createFilegroup = false;
     $scope.createLog = true;
-
-    $scope.typeStorage = ["KB", "MB", "GB", "%"];
-
+    $scope.arrTS = ["KB", "MB", "GB", "%"];
     $scope.dbInfo = {
         dbName: 'DemoName',
         primaryInfo: {
@@ -133,3 +131,8 @@ LOG ON(
 //     }
 //     document.getElementById('LcodeSQL').innerHTML = sql;
 // }
+// 
+// 
+// 
+// 
+// Hello
