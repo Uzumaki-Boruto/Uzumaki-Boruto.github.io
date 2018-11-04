@@ -43,13 +43,19 @@ app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) 
         var result = !$scope.createPrimary;
         var dbInfo = $scope.dbInfo;
         if ($scope.createPrimary) {
-            result = !Object.values(dbInfo.primaryInfo).includes(null) && !Object.values(dbInfo.primaryInfo).includes(undefined) && !Object.values(dbInfo.primaryInfo).includes('');
+            result = !Object.values(dbInfo.primaryInfo).includes(null) &&
+                !Object.values(dbInfo.primaryInfo).includes(undefined) &&
+                !Object.values(dbInfo.primaryInfo).includes('');
         }
         if ($scope.createFilegroup && result) {
-            result = !Object.values(dbInfo.filegroupInfo).includes(null) && !Object.values(dbInfo.filegroupInfo).includes(undefined) && !Object.values(dbInfo.filegroupInfo).includes('');
+            result = !Object.values(dbInfo.filegroupInfo).includes(null) &&
+                !Object.values(dbInfo.filegroupInfo).includes(undefined) &&
+                !Object.values(dbInfo.filegroupInfo).includes('');
         }
         if ($scope.createLog && result) {
-            result = !Object.values(dbInfo.logInfo).includes(null) && !Object.values(dbInfo.logInfo).includes(undefined) && !Object.values(dbInfo.logInfo).includes('');
+            result = !Object.values(dbInfo.logInfo).includes(null) &&
+                !Object.values(dbInfo.logInfo).includes(undefined) &&
+                !Object.values(dbInfo.logInfo).includes('');
         }
         return result;
     };
