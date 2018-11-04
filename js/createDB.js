@@ -41,7 +41,7 @@ app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) 
             return false;
         }
         var result = false;
-        var dbInfo = angular.element(document.body).scope().dbInfo;
+        var dbInfo = $scope.dbInfo;
         if ($scope.createPrimary) {
             result = !Object.values(dbInfo.primaryInfo).includes(null) && !Object.values(dbInfo.primaryInfo).includes('');
         }
@@ -54,8 +54,8 @@ app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) 
         return result;
     };
     $scope.genCode = function () {
-        var scope = angular.element(document.body).scope();
-        var dbInfo = scope.dbInfo;
+        
+        var dbInfo = $scope.dbInfo;
         var finalCode = `USE MASTER
 GO
 IF EXISTS(SELECT * FROM MASTER ..SysDatabases WHERE NAME = '${dbInfo.dbName}')
@@ -64,7 +64,7 @@ GO
 -- CREATE DATABASE
 CREATE DATABASE ${dbInfo.dbName}
 `;
-        if (scope.createPrimary) {
+        if ($scope.createPrimary) {
             var primaryInfo = dbInfo.primaryInfo;
             var primaryCode = `--Tạo Primary
 ON PRIMARY(
@@ -74,7 +74,7 @@ ON PRIMARY(
     MAXSIZE = ${primaryInfo.primaryMaxSize}${primaryInfo.primaryMaxSizeType},
     FILEGROWTH = ${primaryInfo.primaryGrowth}${primaryInfo.primaryGrowthType})`;
             finalCode += primaryCode;
-            if (scope.createFilegroup) {
+            if ($scope.createFilegroup) {
                 var filegroupInfo = dbInfo.filegroupInfo;
 
                 var fileGroupCode = `,
@@ -87,7 +87,7 @@ ON PRIMARY(
     FILEGROWTH = ${filegroupInfo.filegroupGrowth}${filegroupInfo.filegroupGrowthType})`
                 finalCode += fileGroupCode;
             }
-            if (scope.createLog) {
+            if ($scope.createLog) {
                 var logInfo = dbInfo.logInfo;
                 var logCode = `
 --Tạo Log ${logInfo.logName}
@@ -109,8 +109,8 @@ LOG ON(
 //JQuery
 $(document).ready(function () {
     $("#copyButton").click(function () {
-        var scope = angular.element(document.body).scope();
-        if (!scope.validated()) {
+        
+        if (!$scope.validated()) {
             alert('Vui lòng điền đầy đủ thông tin để tạo bảng');
             return;
         }
