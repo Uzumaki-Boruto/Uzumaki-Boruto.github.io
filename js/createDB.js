@@ -40,16 +40,16 @@ app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) 
         if ($scope.dbInfo.dbName == '') {
             return false;
         }
-        var result = false;
+        var result = !$scope.createPrimary;
         var dbInfo = $scope.dbInfo;
         if ($scope.createPrimary) {
-            result = !Object.values(dbInfo.primaryInfo).includes(null) && !Object.values(dbInfo.primaryInfo).includes('');
+            result = !Object.values(dbInfo.primaryInfo).includes(null) && !Object.values(dbInfo.primaryInfo).includes(undefined) && !Object.values(dbInfo.primaryInfo).includes('');
         }
         if ($scope.createFilegroup && result) {
-            result = !Object.values(dbInfo.filegroupInfo).includes(null) && !Object.values(dbInfo.filegroupInfo).includes('');
+            result = !Object.values(dbInfo.filegroupInfo).includes(null) && !Object.values(dbInfo.filegroupInfo).includes(undefined) && !Object.values(dbInfo.filegroupInfo).includes('');
         }
         if ($scope.createLog && result) {
-            result = !Object.values(dbInfo.logInfo).includes(null) && !Object.values(dbInfo.logInfo).includes('');
+            result = !Object.values(dbInfo.logInfo).includes(null) && !Object.values(dbInfo.logInfo).includes(undefined) && !Object.values(dbInfo.logInfo).includes('');
         }
         return result;
     };
@@ -108,12 +108,7 @@ LOG ON(
 
 //JQuery
 $(document).ready(function () {
-    $("#copyButton").click(function () {
-        
-        if (!$scope.validated()) {
-            alert('Vui lòng điền đầy đủ thông tin để tạo bảng');
-            return;
-        }
+    $("#copyButton").click(function () {      
         $("#code").select();
         document.execCommand('copy');
         alert("Copied");
