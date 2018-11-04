@@ -65,7 +65,7 @@
           </div>
           <div id='quanCol' class="form-group">
           </div>
-          <button type="button" class="btn btn-success">Next >></button>
+          <button type="button" class="btn btn-success" id="copyButton">Copy to clipboard >></button>
         </div>
         <div class="card-footer">
           <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
@@ -125,18 +125,18 @@
     </div>
   </div>
 </div>
-<div class="row" ng-if="!validate()">
+<div class="row" ng-if="!validated()">
   <div class="col-lg-12 col-md-6 mb-4">
     <h4 class="text-danger my-3">
       Vui lòng điền đầy đủ thông tin ở các bảng, code sẽ tự động được tạo
     </h4>
   </div>
 </div>
-<div class="row" ng-if="validate()">
+<div class="row" ng-if="validated()">
   <div class="col-lg-12 col-md-6 mb-4">
     <div class="form-group">
       <h4 class="text-primary my-3" for="codeSQL">CodeSQL:</h4>
-      <textarea class="form-control" style="width: 100%" rows="25" readonly>{{genCodeTable()}}</textarea>
+      <textarea class="form-control" style="width: 100%" rows="25" id="code" readonly>{{genCodeTable()}}</textarea>
     </div>
   </div>
 </div>
