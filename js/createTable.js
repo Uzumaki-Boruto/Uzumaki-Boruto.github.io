@@ -1,6 +1,6 @@
 app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) {
 	$scope.selected = 0;
-	$scope.tdata = ["VARCHAR", "INT", "DATETIME", "BOOLEAN", "DECIMAL"];
+	$scope.tdata = ["NVARCHAR", "INT", "DATETIME", "BOOLEAN", "DECIMAL"];
 	$scope.dbName = '';
 	$scope.countTable = 1;
 	$scope.countCollum = [1];
@@ -13,6 +13,7 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 		collumInfos: [{
 			collumName: '',
 			collumType: '',
+			identity: false,
 			allowNull: false,
 		}]
 	}];
@@ -30,21 +31,19 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 					collumInfos: [{
 						collumName: '',
 						collumType: '',
+						identity: false,
 						allowNull: false,
 					}]
 				};
 				$scope.tableInfos.push(obj);
 				$scope.countCollum.push(1);
-				console.log($scope.countCollum);
-				console.log($scope.tableInfos);
 			}
 		}
 		else {
 			for (var i = $scope.tableInfos.length - $scope.countTable; i > 0; i--) {
 				$scope.tableInfos.splice(-1, 1);
 				$scope.countCollum.splice(-1, 1);
-				console.log($scope.countCollum);
-				console.log($scope.tableInfos);
+				$scope.selected--;
 			}
 		}
 	};
@@ -57,16 +56,15 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 				var obj = {
 					collumName: '',
 					collumType: '',
+					identity: false,
 					allowNull: false,
 				};
 				colInfos.push(obj);
 			}
-			console.log($scope.colInfos);
 		}
 		else {
 			for (var i = colInfos.length - $scope.countCollum[currentIndex]; i > 0; i--) {
 				colInfos.splice(-1, 1);
-				console.log($scope.colInfos);
 			}
 		}
 	};
@@ -101,6 +99,7 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 			for (let i = 0; i < table.collumInfos.length; i++) {
 				const collum = table.collumInfos[i];
 				var colCode = `	${collum.collumName} ${collum.collumType == 'NVARCHAR' ? 'NVARCHAR(255)' : collum.collumType}`;
+				colCode += `${collum.identity ? 'IDENTITY' : ''}`;
 				colCode += `${collum.allowNull ? '' : ' NOT NULL'}`
 				if (i != table.collumInfos.length - 1) {
 					colCode += ',\n';
