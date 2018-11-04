@@ -116,10 +116,10 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 				colCode += `${collum.identity ? ' IDENTITY' : ''}`;
 				colCode += `${collum.allowNull ? '' : ' NOT NULL'}`;
 				if (collum.primaryKey) {
-					alterCode += `\n--Add primary key\nALTER [${table.tableName}]\n\tADD PRIMARY KEY ([${collum.collumName}])\nGO`;
+					alterCode += `\n--Add primary key\nALTER TABLE [${table.tableName}]\n\tADD PRIMARY KEY ([${collum.collumName}])\nGO`;
 				}
 				if (collum.foreignKey) {
-					alterCode += `\n--Add foreign key\nALTER [${table.tableName}]\n\tADD FOREIGN KEY ([${collum.collumName}]) REFERENCES [${collum.referencesTo}]([${collum.referencesTable}])\nGO`;
+					alterCode += `\n--Add foreign key\nALTER TABLE [${table.tableName}]\n\tADD FOREIGN KEY ([${collum.collumName}]) REFERENCES [${collum.referencesTo}]([${collum.referencesTable}])\nGO`;
 				}
 				if (i != table.collumInfos.length - 1) {
 					colCode += ',\n';
