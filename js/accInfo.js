@@ -26,4 +26,10 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
-var accInfo = { username: getParameterByName('txtUser').toLowerCase(), pass: getParameterByName('txtPass') };
+var username = getParameterByName('txtUser');
+var passW = getParameterByName('txtPass');
+
+if (username == null || username == '' || passW == null || passW == '') {
+    window.location = "./index.html";
+}
+var accInfo = { username: username.toLowerCase(), pass: passW };

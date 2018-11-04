@@ -54,7 +54,7 @@
     <div class="container">
       <h2 class="my-3 text-center">Tool tự tạo SQL Query</h2>
       <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-3 col-md-4 mb-4">
           <div class="card text-white bg-info h-100">
             <div class="card-body">
               <h4 class="card-title">Số lượng bảng:</h4>
@@ -80,7 +80,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-9 col-md-8 mb-4">
           <div class="card text-white bg-dark h-100 w-100">
             <div class="card-header">
               <ul class="nav nav-pills" role="tablist">
@@ -128,7 +128,7 @@
                         </label>
                       </div>
                       <!-- <div class="col-1"></div> -->
-                      <div class="col-2 text-right my-2"><br>
+                      <div class="col-2 text-right my-2" ng-if="collum.collumName"><br>
                         <a class="btn btn-info" data-toggle="modal" data-target="#dialog{{$index}}">Advance</a>
                       </div>
                       <div id="dialog{{$index}}" class="modal fade" role="dialog">
