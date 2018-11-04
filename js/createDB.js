@@ -40,7 +40,7 @@ app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) 
         if ($scope.dbInfo.dbName == '') {
             return false;
         }
-        var result = false;
+        var result = !$scope.createPrimary;
         var dbInfo = $scope.dbInfo;
         if ($scope.createPrimary) {
             result = !Object.values(dbInfo.primaryInfo).includes(null) && !Object.values(dbInfo.primaryInfo).includes('');
