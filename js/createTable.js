@@ -82,7 +82,7 @@ app.controller('controller', function ($scope) {
 			}
 		}
 	};
-	$scope.validate = function () {
+	$scope.validated = function () {
 		var scope = angular.element(document.body).scope();
 		if (scope.dbName == '') {
 			return false;
@@ -129,4 +129,18 @@ CREATE TABLE ${table.tableName}(
 		return finalCode;
 	};
 
+});
+
+//JAVa script
+$(document).ready(function () {
+    $("#copyButton").click(function () {
+        var scope = angular.element(document.body).scope();
+        if (!scope.validated()) {
+            alert('Vui lòng điền đầy đủ thông tin để tạo bảng');
+            return;
+        }
+        $("#code").select();
+        document.execCommand('copy');
+        alert("Copied");
+    });
 });
