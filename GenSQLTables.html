@@ -130,84 +130,108 @@
                       <!-- <div class="col-1"></div> -->
                       <div class="col-2 text-right my-2" ng-if="collum.collumName"><br>
                         <a class="btn btn-info" data-toggle="modal" data-target="#dialog{{table.tableID}}_{{$index}}">Advance</a>
-                      
-                      <div id="dialog{{table.tableID}}_{{$index}}" class="modal fade" role="dialog">
-                        <div class="modal-dialog">
-                          <!-- Modal content-->
-                          <div class="modal-content bg-info">
-                            <div class="modal-header">
-                              <h4 class="modal-title">Thiết lập nâng cao cột [{{collum.collumName}}]</h4>
-                              <button type="button" class="close btn btn-danger" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                              <div class="container">
-                                <div class="row" ng-if="collum.collumType == 'INT'">
-                                  <div class="col-lg-3">
-                                    <label>Identity </label>
-                                  </div>
-                                  <div class="col-lg-6">
-                                    <label class='switch'>
-                                      <input type="checkbox" ng-model="collum.identity">
-                                      <span class='slider round'></span>
-                                    </label>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-lg-3">
-                                    <label>Unique </label>
-                                  </div>
-                                  <div class="col-lg-6">
-                                    <label class='switch'>
-                                      <input type="checkbox" ng-model="collum.unique">
-                                      <span class='slider round'></span>
-                                    </label>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-lg-3">
-                                    <label>Primary Key</label>
-                                  </div>
-                                  <div class="col-lg-6">
-                                    <label class='switch'>
-                                      <input type="checkbox" ng-model="collum.primaryKey">
-                                      <span class='slider round'></span>
-                                    </label>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-lg-3">
-                                    <label>Foreign Key</label>
-                                  </div>
-                                  <div class="col-lg-6">
-                                    <label class='switch'>
-                                      <input type="checkbox" ng-model="collum.foreignKey">
-                                      <span class='slider round'></span>
-                                    </label>
-                                  </div>
-                                  <div class="row container" ng-if="collum.foreignKey">
-                                    <div class="col-lg-6">
-                                      <div class="form-group">
-                                        <label>Tên bảng:</label>
-                                        <input class="form-control" type="text" ng-model="collum.referencesTo">
-                                      </div>
+
+                        <div id="dialog{{table.tableID}}_{{$index}}" class="modal fade" role="dialog">
+                          <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content bg-info">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Thiết lập nâng cao cột [{{collum.collumName}}]</h4>
+                                <button type="button" class="close btn btn-danger" data-dismiss="modal">&times;</button>
+                              </div>
+                              <div class="modal-body">
+                                <div class="container">
+                                  <div class="row" ng-if="collum.collumType == 'INT'">
+                                    <div class="col-lg-3">
+                                      <label>Identity </label>
                                     </div>
                                     <div class="col-lg-6">
-                                      <div class="form-group">
-                                        <label>Tên cột:</label>
-                                        <input class="form-control" type="text" ng-model="collum.referencesTable">
+                                      <label class='switch'>
+                                        <input type="checkbox" ng-model="collum.identity">
+                                        <span class='slider round'></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-lg-3">
+                                      <label>Unique </label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <label class='switch'>
+                                        <input type="checkbox" ng-model="collum.unique">
+                                        <span class='slider round'></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-lg-3">
+                                      <label>Primary Key</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <label class='switch'>
+                                        <input type="checkbox" ng-model="collum.primaryKey">
+                                        <span class='slider round'></span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-lg-3">
+                                      <label>Foreign Key</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <label class='switch'>
+                                        <input type="checkbox" ng-model="collum.foreignKey">
+                                        <span class='slider round'></span>
+                                      </label>
+                                    </div>
+                                    <div class="row container" ng-if="collum.foreignKey">
+                                      <div class="col-lg-6">
+                                        <div class="form-group">
+                                          <label>Tên bảng:</label>
+                                          <input class="form-control" type="text" ng-model="collum.referencesTo">
+                                        </div>
+                                      </div>
+                                      <div class="col-lg-6">
+                                        <div class="form-group">
+                                          <label>Tên cột:</label>
+                                          <input class="form-control" type="text" ng-model="collum.referencesTable">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-lg-3">
+                                      <label>Check</label>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <label class='switch'>
+                                        <input type="checkbox" ng-model="collum.addCheck">
+                                        <span class='slider round'></span>
+                                      </label>
+                                    </div>
+                                    <div class="row container" ng-if="collum.addCheck">
+                                      <div class="col-12 form-group">
+                                        <label for="Size">Nhập điều kiện và giá trị:</label>
+                                          <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <select class="custom-select" ng-model="collum.condition" ng-options="option for option in typeCondition">
+                                              </select>
+                                            </div>
+                                            <input type="text" class="form-control" ng-model="collum.valueCheck">
+                                          </div>
+                                        
                                       </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Xong</button>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Xong</button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
                     </div>
                   </div>
                 </div>
