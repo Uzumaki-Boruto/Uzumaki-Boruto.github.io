@@ -112,9 +112,12 @@ app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) 
 
 //JQuery
 $(document).ready(function () {
+    $('#copyButton').tooltip({title: "Copy", placement: "bottom"});
     $("#copyButton").click(function () {
         $("#code").select();
         document.execCommand('copy');
-        alert("Copied");
+        $('#copyButton').tooltip("dispose");
+        $('#copyButton').tooltip({title: "Copied", placement: "bottom"});
+        $('#copyButton').tooltip("show");
     });
 });

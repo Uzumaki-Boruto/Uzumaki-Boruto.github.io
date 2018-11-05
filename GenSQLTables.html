@@ -2,264 +2,261 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
-    crossorigin="anonymous">
-  <link rel="stylesheet" href="css/Switch.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-  <script src="js/accInfo.js"></script>
-  <script type="text/javascript" src="js/createTable.js"></script>
-  <title>Create Table</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+	crossorigin="anonymous">
+	<link rel="stylesheet" href="css/Switch.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script src="js/accInfo.js"></script>
+	<script type="text/javascript" src="js/createTable.js"></script>
+	<title>Create Table</title>
 </head>
 
 <body ng-app="genSQLCode">
-  <div ng-controller="checkControl" ng-init="testLogin()">
-  </div>
-  <div ng-controller="ControllerTB">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
-      <div class="container">
-        <a class="navbar-brand" href="https://www.facebook.com/binner9225" target="_blank">Anh Khoa &copy;</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-          aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="GenSQLDB.html?txtUser={{accInfo.username}}&txtPass={{accInfo.pass}}">Tạo
-                Database</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="GenSQLTables.html?txtUser={{accInfo.username}}&txtPass={{accInfo.pass}}">Tạo
-                Table
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Tạo Stored Procedure</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Tạo Trigger</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <div class="container">
-      <h2 class="my-3 text-center">Tool tự tạo SQL Query</h2>
-      <div class="row">
-        <div class="col-lg-3 col-md-4 mb-4">
-          <div class="card text-white bg-info h-100">
-            <div class="card-body">
-              <h4 class="card-title">Số lượng bảng:</h4>
-              <div class="form-group">
-                <label for="DBName" class="form-control-label">Nhập tên Database:</label>
-                <input type="text" class="form-control" ng-model='dbName'>
-              </div>
-              <div class="form-group" id="fgquanTB">
-                <label class="form-control-label">Nhập số lượng bảng:</label>
-                <div class="input-group mb-3">
-                  <input type="number" class="form-control" id="sltb" ng-model="countTable" min="1" max="20" ng-change="addTable();">
-                  <div class="input-group-append">
-                    <button class="btn btn-success" ng-click="countTable = countTable + 1;addTable();">Add</button>
-                  </div>
-                </div>
-              </div>
-              <div id='quanCol' class="form-group">
-              </div>
-              <button ng-if="validated()" type="button" class="btn btn-success" id="copyButton">Copy to clipboard</button>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-9 col-md-8 mb-4">
-          <div class="card text-white bg-dark h-100 w-100">
-            <div class="card-header">
-              <ul class="nav nav-pills" role="tablist">
-                <li class="nav-item" ng-repeat="table in tableInfos" ng-click="select($index)">
-                  <a class="nav-link" ng-class="{active: $index == selected}" data-toggle="pill" href="#table{{table.tableID}}">{{table.tableID}}</a>
-                </li>
-              </ul>
-            </div>
-            <div class="card-body">
-              <div class="tab-content">
-                <div ng-repeat="table in tableInfos" class="tab-pane container" ng-class="{active: $index == selected}"
-                  id="table{{table.tableID}}">
-                  <h4 class="card-title">[Bảng {{table.tableID}}] Tùy chỉnh Cột:</h4>
-                  <div class='form-group row'>
-                    <div class="col-9">
-                      <label class='form-control-label mr-2'>Tên bảng:</label>
-                      <input class='form-control mr-2' type='text' ng-model='table.tableName'>
-                    </div>
-                    <div class="col-3">
-                      <label class='form-control-label mr-2'>Số lượng cột:</label>
-                      <div class="input-group">
-                        <input type="number" class="form-control" id="sltb" min="1" max="20" ng-model="countCollum[selected]"
-                          ng-change="addCollum(selected)">
-                        <div class="input-group-append">
-                          <button class="btn btn-success" ng-click="countCollum[selected] = countCollum[selected] + 1;addCollum(selected);">Add</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div id="col">
-                    <div class='form-group row' ng-repeat="collum in table.collumInfos">
-                      <div class='col-6'>
-                        <label>Tên Cột {{$index + 1}}:</label>
-                        <input class='form-control mr-2' type='text' ng-model='collum.collumName'>
-                      </div>
-                      <div class='col-3'>
-                        <label>Kiểu dữ liệu: </label>
-                        <select class='custom-select' ng-model='collum.collumType' ng-options='x for x in tdata'></select>
-                      </div>
-                      <div class='col-1'>
-                        <label>NULL</label><br>
-                        <label class='switch'>
-                          <input type="checkbox" ng-model="collum.allowNull">
-                          <span class='slider round'></span>
-                        </label>
-                      </div>
-                      <!-- <div class="col-1"></div> -->
-                      <div class="col-2 text-right my-2" ng-if="collum.collumName"><br>
-                        <a class="btn btn-info" data-toggle="modal" data-target="#dialog{{table.tableID}}_{{$index}}">Advance</a>
+	<div ng-controller="checkControl" ng-init="testLogin()">
+	</div>
+	<div ng-controller="ControllerTB">
+		<!-- Navigation -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
+			<div class="container">
+				<a class="navbar-brand" href="https://www.facebook.com/binner9225" target="_blank">Anh Khoa &copy;</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+				aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="GenSQLDB.html?txtUser={{accInfo.username}}&txtPass={{accInfo.pass}}">Tạo
+						Database</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link" href="GenSQLTables.html?txtUser={{accInfo.username}}&txtPass={{accInfo.pass}}">Tạo
+							Table
+							<span class="sr-only">(current)</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Tạo Stored Procedure</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Tạo Trigger</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		<h2 class="my-3 text-center">Tool tự tạo SQL Query</h2>
+		<div class="form-row">
+			<div class="col-lg-3 col-md-4 mb-4">
+				<div class="card text-white bg-info h-100">
+					<div class="card-header">
+						<h4 class="card-title">Số lượng bảng:</h4>
+					</div>
+					<div class="card-body">
+						<div class="form-group">
+							<label for="DBName" class="form-control-label">Nhập tên Database:</label>
+							<input type="text" class="form-control" ng-model='dbName'>
+						</div>
+						<div class="form-group" id="fgquanTB">
+							<label class="form-control-label">Nhập số lượng bảng:</label>
+							<div class="input-group mb-3">
+								<input type="number" class="form-control" id="sltb" ng-model="countTable" min="1" max="20" ng-change="addTable();">
+								<div class="input-group-append">
+									<button class="btn btn-success" ng-click="countTable = countTable + 1;addTable();">Add</button>
+								</div>
+							</div>
+						</div>
+						<div id='quanCol' class="form-group">
+						</div>
+						<button type="button" class="btn btn-sm btn-dark" id="copyButton" ng-hide="!validated()">Copy to clipboard</button>
+					</div>
+					<div class="card-footer">
+						<small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-9 col-md-8 mb-4">
+				<div class="card text-white bg-dark h-100 w-100">
+					<div class="card-header">
+						<ul class="nav nav-pills" role="tablist">
+							<li class="nav-item" ng-repeat="table in tableInfos" ng-click="select($index)">
+								<a class="nav-link" ng-class="{active: $index == selected}" data-toggle="pill" href="#table{{table.tableID}}">{{table.tableID}}</a>
+							</li>
+						</ul>
+					</div>
+					<div class="card-body">
+						<div class="tab-content">
+							<div ng-repeat="table in tableInfos" class="tab-pane container" ng-class="{active: $index == selected}"
+							id="table{{table.tableID}}">
+							<h4 class="card-title">[Bảng {{table.tableID}}] Tùy chỉnh Cột:</h4>
+							<div class='form-group row'>
+								<div class="col-9">
+									<label class='form-control-label mr-2'>Tên bảng:</label>
+									<input class='form-control mr-2' type='text' ng-model='table.tableName'>
+								</div>
+								<div class="col-3">
+									<label class='form-control-label mr-2'>Số lượng cột:</label>
+									<div class="input-group">
+										<input type="number" class="form-control" id="sltb" min="1" max="20" ng-model="countCollum[selected]"
+										ng-change="addCollum(selected)">
+										<div class="input-group-append">
+											<button class="btn btn-success" ng-click="countCollum[selected] = countCollum[selected] + 1;addCollum(selected);">Add</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class='form-row' ng-repeat="collum in table.collumInfos">
+								<div class='form-group col-5'>
+									<label class="form-control-label">Tên Cột {{$index + 1}}:</label>
+									<input class='form-control' type='text' ng-model='collum.collumName'>
+								</div>
+								<div class='form-group col-3'>
+									<label class="form-control-label">Kiểu dữ liệu: </label>
+									<select class='custom-select' ng-model='collum.collumType' ng-options='x for x in tdata'></select>
+								</div>
+								<div class='form-group col-2'>
+									<label class="form-control-label">NULL</label><br>
+									<label class='switch'>
+										<input type="checkbox" ng-model="collum.allowNull">
+										<span class='slider round'></span>
+									</label>
+								</div>
+								<div class="form-group col-2 my-2" ng-if="collum.collumName"><br>
+									<label class="form-control-label"></label>
+									<button class="btn btn-info" data-toggle="modal" data-target="#dialog{{table.tableID}}_{{$index}}">Advance</button>
+								</div>
+								<!-- Modal Advance -->
+								<div id="dialog{{table.tableID}}_{{$index}}" class="modal fade" role="dialog">
+									<div class="modal-dialog">
+										<!-- Modal content-->
+										<div class="modal-content bg-dark">
+											<div class="modal-header">
+												<h4 class="modal-title">Thiết lập nâng cao cột [{{collum.collumName}}]</h4>
+												<button type="button" class="close btn btn-danger" data-dismiss="modal">&times;</button>
+											</div>
+											<div class="modal-body">
+												<div class="form-row" ng-if="collum.collumType == 'INT'">
+													<div class="col text-right">
+														<label class="mr-5">Identity</label>
+													</div>
+													<div class="col">
+														<label class='switch'>
+															<input type="checkbox" ng-model="collum.identity">
+															<span class='slider round'></span>
+														</label>
+													</div>
+												</div>
 
-                        <div id="dialog{{table.tableID}}_{{$index}}" class="modal fade" role="dialog">
-                          <div class="modal-dialog">
-                            <!-- Modal content-->
-                            <div class="modal-content bg-info">
-                              <div class="modal-header">
-                                <h4 class="modal-title">Thiết lập nâng cao cột [{{collum.collumName}}]</h4>
-                                <button type="button" class="close btn btn-danger" data-dismiss="modal">&times;</button>
-                              </div>
-                              <div class="modal-body">
-                                <div class="container">
-                                  <div class="row" ng-if="collum.collumType == 'INT'">
-                                    <div class="col-lg-3">
-                                      <label>Identity </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                      <label class='switch'>
-                                        <input type="checkbox" ng-model="collum.identity">
-                                        <span class='slider round'></span>
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-lg-3">
-                                      <label>Unique </label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                      <label class='switch'>
-                                        <input type="checkbox" ng-model="collum.unique">
-                                        <span class='slider round'></span>
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-lg-3">
-                                      <label>Primary Key</label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                      <label class='switch'>
-                                        <input type="checkbox" ng-model="collum.primaryKey">
-                                        <span class='slider round'></span>
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-lg-3">
-                                      <label>Foreign Key</label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                      <label class='switch'>
-                                        <input type="checkbox" ng-model="collum.foreignKey">
-                                        <span class='slider round'></span>
-                                      </label>
-                                    </div>
-                                    <div class="row container" ng-if="collum.foreignKey">
-                                      <div class="col-lg-6">
-                                        <div class="form-group">
-                                          <label>Tên bảng:</label>
-                                          <input class="form-control" type="text" ng-model="collum.referencesTo">
-                                        </div>
-                                      </div>
-                                      <div class="col-lg-6">
-                                        <div class="form-group">
-                                          <label>Tên cột:</label>
-                                          <input class="form-control" type="text" ng-model="collum.referencesTable">
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-lg-3">
-                                      <label>Check</label>
-                                    </div>
-                                    <div class="col-lg-6">
-                                      <label class='switch'>
-                                        <input type="checkbox" ng-model="collum.addCheck">
-                                        <span class='slider round'></span>
-                                      </label>
-                                    </div>
-                                    <div class="row container" ng-if="collum.addCheck">
-                                      <div class="col-12 form-group">
-                                        <label for="Size">Nhập điều kiện và giá trị:</label>
-                                          <div class="input-group">
-                                            <div class="input-group-prepend">
-                                              <select class="custom-select" ng-model="collum.condition" ng-options="option for option in typeCondition">
-                                              </select>
-                                            </div>
-                                            <input type="text" class="form-control" ng-model="collum.valueCheck">
-                                          </div>
-                                        
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Xong</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row" ng-if="!validated()">
-        <div class="col-lg-12 col-md-6 mb-4">
-          <h4 class="text-danger my-3">
-            Vui lòng điền đầy đủ thông tin ở các bảng, code sẽ tự động được tạo
-          </h4>
-        </div>
-      </div>
-      <div class="row" ng-if="validated()">
-        <div class="col-lg-12 col-md-6 mb-4">
-          <div class="form-group">
-            <h4 class="text-primary my-3" for="codeSQL">CodeSQL:</h4>
-            <textarea class="form-control" style="width: 100%" rows="25" id="code" readonly>{{genCodeTable()}}</textarea>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+												<div class="form-row">
+													<div class="col text-right">
+														<label  class="mr-5">Unique </label>
+													</div>
+													<div class="col">
+														<label class='switch'>
+															<input type="checkbox" ng-model="collum.unique">
+															<span class='slider round'></span>
+														</label>
+													</div>
+												</div>
+
+												<div class="form-row">
+													<div class="col text-right">
+														<label  class="mr-5">Primary Key</label>
+													</div>
+													<div class="col">
+														<label class='switch'>
+															<input type="checkbox" ng-model="collum.primaryKey">
+															<span class='slider round'></span>
+														</label>
+													</div>
+												</div>
+
+												<div class="form-row">
+													<div class="col text-right">
+														<label  class="mr-5">Foreign Key</label>
+													</div>
+													<div class="col">
+														<label class='switch'>
+															<input type="checkbox" ng-model="collum.foreignKey">
+															<span class='slider round'></span>
+														</label>
+													</div>
+												</div>
+
+												<div class="form-row" ng-if="collum.foreignKey">																	
+													<div class="form-group col-lg">
+														<label class=>Tên bảng:</label>
+														<input class="form-control" type="text" ng-model="collum.referencesTo">
+													</div>
+													<div class="form-group col-lg">
+														<label>Tên cột:</label>
+														<input class="form-control" type="text" ng-model="collum.referencesTable">
+													</div>
+												</div>
+
+												<div class="form-row">
+													<div class="col text-right">
+														<label  class="mr-5">Check</label>
+													</div>
+													<div class="col">
+														<label class='switch'>
+															<input type="checkbox" ng-model="collum.addCheck">
+															<span class='slider round'></span>
+														</label>
+													</div>
+												</div>
+
+												<div class="form-group" ng-if="collum.addCheck">
+													<label for="Size">Nhập điều kiện và giá trị:</label>
+													<div class="input-group">
+														<div class="input-group-prepend">
+															<select class="custom-select" ng-model="collum.condition" ng-options="option for option in typeCondition">
+															</select>
+														</div>
+														<input type="text" class="form-control" ng-model="collum.valueCheck">
+													</div>
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-outline-primary" data-dismiss="modal">Xong</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-footer">
+					<small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-row" ng-if="!validated()">
+		<div class="col-lg-12 col-md-6 mb-4">
+			<h4 class="text-danger my-3">
+				Vui lòng điền đầy đủ thông tin ở các bảng, code sẽ tự động được tạo
+			</h4>
+		</div>
+	</div>
+	<div class="form-row" ng-if="validated()">
+		<div class="col-lg-12 col-md-6 mb-4">
+			<div class="form-group">
+				<h4 class="text-primary my-3" for="codeSQL">CodeSQL:</h4>
+				<textarea class="form-control" style="width: 100%" rows="25" id="code" readonly>{{genCodeTable()}}</textarea>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
 </body>
 
 </html>

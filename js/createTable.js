@@ -161,9 +161,12 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 
 //JAVa script
 $(document).ready(function () {
+	$('#copyButton').tooltip({title: "Copy", placement: "bottom"});
 	$("#copyButton").click(function () {
 		$("#code").select();
-		document.execCommand('copy');
-		alert("Copied");
+		document.execCommand('copy');	
+		$('#copyButton').tooltip("dispose");
+		$('#copyButton').tooltip({title: "Copied", placement: "bottom"});
+		$('#copyButton').tooltip("show");
 	});
 });
