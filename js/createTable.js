@@ -134,7 +134,7 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 					alterCode += `\n--Add primary key\nALTER TABLE [dbo].[${table.tableName}]\n\tADD CONSTRAINT PK_${collum.collumName} PRIMARY KEY ([${collum.collumName}])\nGO`;
 				}
 				if (collum.foreignKey) {
-					alterCode += `\n--Add foreign key\nALTER TABLE [dbo].[${table.tableName}]\n\tADD FOREIGN KEY ([${collum.collumName}]) REFERENCES [${collum.referencesTo}]([${collum.referencesTable}])\nGO`;
+					alterCode += `\n--Add foreign key\nALTER TABLE [dbo].[${table.tableName}]\n\tCONSTRAINT FK_${collum.referencesTo}${table.tableName} FOREIGN KEY ([${collum.collumName}]) REFERENCES [${collum.referencesTo}]([${collum.referencesTable}])\nGO`;
 				}
 				if (collum.addCheck)
 				{

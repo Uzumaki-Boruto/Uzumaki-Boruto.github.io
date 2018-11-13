@@ -62,16 +62,15 @@ app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) 
     $scope.genCode = function () {
 
         var dbInfo = $scope.dbInfo;
-        var finalCode = 'USE MASTER\nGO';
-        finalCode += `\n--Kiểm tra xem database có tồn tại chưa, nếu có, xóa nó`
+        var finalCode = 'USE MASTER\nGO\n--Kiểm tra xem database có tồn tại chưa, nếu có, xóa nó';
         finalCode += `\nIF EXISTS(SELECT * FROM MASTER ..SysDatabases WHERE NAME = '${dbInfo.dbName}')`;
         finalCode += `\nDROP DATABASE ${dbInfo.dbName}`;
         finalCode += `\n-- CREATE DATABASE`;
-        finalCode += `\nCREATE DATABASE ${dbInfo.dbName}\n`;
+        finalCode += `\nCREATE DATABASE ${dbInfo.dbName}`;
 
         if ($scope.createPrimary) {
             var primaryInfo = dbInfo.primaryInfo;
-            var primaryCode = `--Tạo Primary ${primaryInfo.primaryName}\nON PRIMARY(`;
+            var primaryCode = `\n--Tạo Primary ${primaryInfo.primaryName}\nON PRIMARY(`;
             primaryCode += `\n\tNAME = ${primaryInfo.primaryName}_dat,`;
             primaryCode += `\n\tFILENAME = N'C:\\Program Files\\Microsoft SQL Server\\MSSQL14.MSSQLSERVER\\MSSQL\\DATA\\${primaryInfo.primaryName}_dat.mdf',`;
             primaryCode += `\n\tSIZE = ${primaryInfo.primarySize}${primaryInfo.primarySizeType},`;
