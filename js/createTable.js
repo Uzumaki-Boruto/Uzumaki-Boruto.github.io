@@ -123,7 +123,7 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 		var insertCode = "";
 		$scope.tableInfos.forEach(table => {
 			var tbCode = `\n--Create table ${table.tableName}\nCREATE TABLE [${table.tableName}](\n`;
-			insertCode += `\n--INSERT INTO [${table.tableName}](`;
+			insertCode += `\n--INSERT INTO [dbo].[${table.tableName}](`;
 			for (let i = 0; i < table.collumInfos.length; i++) {
 				const collum = table.collumInfos[i];
 				var colCode = `\t[${collum.collumName}] ${collum.collumType == 'NVARCHAR' ? 'NVARCHAR(255)' : collum.collumType}`;
@@ -131,14 +131,14 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 				colCode += `${!collum.allowNull || collum.primaryKey ? ' NOT NULL' : ''}`;
 				colCode += `${collum.unique || collum.primaryKey ? ' UNIQUE' : ''}`;
 				if (collum.primaryKey) {
-					alterCode += `\n--Add primary key\nALTER TABLE [${table.tableName}]\n\tADD PRIMARY KEY ([${collum.collumName}])\nGO`;
+					alterCode += `\n--Add primary key\nALTER TABLE [dbo].[${table.tableName}]\n\tADD CONSTRAINT PK_${collum.collumName} PRIMARY KEY ([${collum.collumName}])\nGO`;
 				}
 				if (collum.foreignKey) {
-					alterCode += `\n--Add foreign key\nALTER TABLE [${table.tableName}]\n\tADD FOREIGN KEY ([${collum.collumName}]) REFERENCES [${collum.referencesTo}]([${collum.referencesTable}])\nGO`;
+					alterCode += `\n--Add foreign key\nALTER TABLE [dbo].[${table.tableName}]\n\tADD FOREIGN KEY ([${collum.collumName}]) REFERENCES [${collum.referencesTo}]([${collum.referencesTable}])\nGO`;
 				}
 				if (collum.addCheck)
 				{
-					alterCode+= `\n--Add check\nALTER TABLE\n\tADD CHECK([${collum.collumName}] ${collum.condition} ${isNaN(collum.valueCheck) ? `'${collum.valueCheck}'` : `${collum.valueCheck}`})\nGO`;
+					alterCode+= `\n--Add check\nALTER TABLE [dbo].[${table.tableName}]\n\tADD CHECK([${collum.collumName}] ${collum.condition} ${isNaN(collum.valueCheck) ? `'${collum.valueCheck}'` : `${collum.valueCheck}`})\nGO`;
 				}
 				if (i != table.collumInfos.length - 1) {
 					colCode += ',\n';
