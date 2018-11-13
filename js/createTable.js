@@ -24,7 +24,8 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 			condition: '',
 			valueCheck: '',
 			allowNull: false,
-			unique: false
+			unique: false,
+			valueDefault: ''
 		}]
 	}];
 
@@ -50,7 +51,8 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 						condition: '',
 						valueCheck: '',
 						allowNull: false,
-						unique: false
+						unique: false,
+						valueDefault: ''
 					}]
 				};
 				$scope.tableInfos.push(obj);
@@ -83,7 +85,8 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 					condition: '',
 					valueCheck: '',
 					allowNull: false,
-					unique: false
+					unique: false,
+					valueDefault: ''
 				};
 				colInfos.push(obj);
 			}
@@ -113,6 +116,10 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 				if (collumInfo.foreignKey && (collumInfo.referencesTo == '' || collumInfo.referencesTable == '')) {
 					result = false;
 				}
+				if (collumInfo.addCheck && (collumInfo.condition == '' || collumInfo.valueCheck == null || collumInfo.valueCheck == ''))
+				{
+					result = false;
+				}
 			});
 		});
 		return result;
@@ -121,9 +128,11 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 		var finalCode = `--Use ${$scope.dbName}\nUSE [${$scope.dbName}]\nGO`;
 		var alterCode = "";
 		var insertCode = "";
+		var selectCode = "";
 		$scope.tableInfos.forEach(table => {
 			var tbCode = `\n--Create table ${table.tableName}\nCREATE TABLE [${table.tableName}](\n`;
 			insertCode += `\n--INSERT INTO [dbo].[${table.tableName}](`;
+			selectCode += `\n--SELECT `;
 			for (let i = 0; i < table.collumInfos.length; i++) {
 				const collum = table.collumInfos[i];
 				var colCode = `\t[${collum.collumName}] ${collum.collumType == 'NVARCHAR' ? 'NVARCHAR(255)' : collum.collumType}`;
@@ -136,22 +145,29 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 				if (collum.foreignKey) {
 					alterCode += `\n--Add foreign key\nALTER TABLE [dbo].[${table.tableName}]\n\tCONSTRAINT FK_${collum.referencesTo}${table.tableName} FOREIGN KEY ([${collum.collumName}]) REFERENCES [${collum.referencesTo}]([${collum.referencesTable}])\nGO`;
 				}
-				if (collum.addCheck)
+				if (collum.addCheck && collum.condition != '' && collum.valueCheck != null && collum.valueCheck != '')
 				{
 					alterCode+= `\n--Add check\nALTER TABLE [dbo].[${table.tableName}]\n\tADD CHECK([${collum.collumName}] ${collum.condition} ${isNaN(collum.valueCheck) ? `'${collum.valueCheck}'` : `${collum.valueCheck}`})\nGO`;
+				}
+				if (collum.valueDefault != null && collum.valueDefault != '')
+				{
+					alterCode+= `\n--Add check\nALTER TABLE [dbo].[${table.tableName}]\n\tADD CONSTRAINT DF_${collum.collumName} DEFAULT ${isNaN(collum.valueDefault) ? `'${collum.valueDefault}'` : `${collum.valueDefault}`} FOR [${collum.collumName}];\nGO`;
 				}
 				if (i != table.collumInfos.length - 1) {
 					colCode += ',\n';
 					insertCode += `[${collum.collumName}], `;
+					selectCode += `[${collum.collumName}], `
 				}
 				else {
 					colCode += ')\nGO';
 					insertCode += `[${collum.collumName}]) VALUES `;
+					selectCode += `[${collum.collumName}] FROM [dbo].[${table.tableName}]`;
 				}
 				tbCode += colCode;
 			}
 			finalCode += tbCode;
 		});
+		insertCode += selectCode;
 		alterCode += insertCode;
 		finalCode += alterCode;
 		return finalCode;
