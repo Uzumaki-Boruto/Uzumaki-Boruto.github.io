@@ -1,4 +1,4 @@
-app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) {
+app.controller('tableCtrl', ['$scope', '$window', function ($scope, $window) {
 	$scope.developer = "Anh Khoa";
 	$scope.selected = 0;
 	$scope.countTable = 1;
