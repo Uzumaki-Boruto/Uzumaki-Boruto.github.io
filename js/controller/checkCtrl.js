@@ -1,23 +1,31 @@
-var app = angular.module('genSQLCode', ['ngCookies']);
-app.controller('checkCtrl', ['$cookies', '$scope', '$window', function ($scope, $window) {
-    $scope.objUser = [{
-        username: "binner",
-        pass: "binner"
-    },
-    {
-        username: "admin",
-        pass: "admin"
-    }];
-
-    $scope.accInfo = $window.accInfo;
-    $scope.testLogin = function () {
-        // Retrieving a cookie
-        var favoriteCookie = $cookies.get('myFavorite');
-        // Setting a cookie
-        $cookies.put('myFavorite', 'oatmeal');
-        console.log(favoriteCookie);
-    }
+angular.module('genSQLCode', ['ngCookies'])
+.controller('checkCtrl', ['$cookies', function($cookies) {
+  // Retrieving a cookie
+  var favoriteCookie = $cookies.get('myFavorite');
+  // Setting a cookie
+  $cookies.put('myFavorite', 'oatmeal');
+  console.log(favoriteCookie);
 }]);
+// var app = angular.module('genSQLCode', ['ngCookies']);
+// app.controller('checkCtrl', ['$cookies', '$window', function ($scope, $window) {
+//     $scope.objUser = [{
+//         username: "binner",
+//         pass: "binner"
+//     },
+//     {
+//         username: "admin",
+//         pass: "admin"
+//     }];
+
+//     $scope.accInfo = $window.accInfo;
+//     $scope.testLogin = function () {
+//         // Retrieving a cookie
+//         var favoriteCookie = $cookies.get('myFavorite');
+//         // Setting a cookie
+//         $cookies.put('myFavorite', 'oatmeal');
+//         console.log(favoriteCookie);
+//     }
+// }]);
 //JS
 // function getParameterByName(name, url) {
 //     if (!url) url = window.location.href;
