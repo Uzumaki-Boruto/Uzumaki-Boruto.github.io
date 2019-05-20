@@ -1,4 +1,4 @@
-angular.module('genSQLCode', ['ngCookies'])
+var app = angular.module('genSQLCode', ['ngCookies'])
 .controller('checkCtrl', ['$cookies', function($cookies) {
   // Retrieving a cookie
   var favoriteCookie = $cookies.get('myFavorite');
