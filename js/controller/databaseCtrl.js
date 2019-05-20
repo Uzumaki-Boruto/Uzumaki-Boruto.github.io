@@ -1,4 +1,5 @@
 app.controller('ControllerDB', ['$scope', '$window', function ($scope, $window) {
+    $scope.developer = "Thông Hoàng";
     $scope.createPrimary = true;
     $scope.createFilegroup = false;
     $scope.createLog = true;

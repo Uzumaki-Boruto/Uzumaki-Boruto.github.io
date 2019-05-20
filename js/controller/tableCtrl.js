@@ -1,12 +1,12 @@
 app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) {
+	$scope.developer = "Anh Khoa";
 	$scope.selected = 0;
 	$scope.countTable = 1;
 	$scope.countCollum = [1];
-
 	$scope.tdata = ["NVARCHAR", "INT", "BOOLEAN", "DECIMAL", "FLOAT", "DATETIME"];
 	$scope.typeCondition = [ "<", "<=", "=", ">=", ">", "<>" ];
 	$scope.dbName = '';
-	//tableInfos chứ id, name, và chứa thông tin cột
+	//tableInfos chứa id, name, và chứa thông tin cột
 	//Muốn trigger cái gì thì cứ việc ng-repeat cái này ra, auto có data
 	$scope.tableInfos = [{
 		tableID: 1,
@@ -31,7 +31,6 @@ app.controller('ControllerTB', ['$scope', '$window', function ($scope, $window) 
 
 	$scope.select = function (index) {
 		$scope.selected = index;
-		//console.log(index);
 	};
 	$scope.addTable = function () {
 		if ($scope.countTable > $scope.tableInfos.length) {
