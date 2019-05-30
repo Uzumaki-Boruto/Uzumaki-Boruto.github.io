@@ -1,280 +1,227 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/Switch.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
-  <script src="js/controller/checkCtrl.js"></script>
-  <script src="js/controller/databaseCtrl.js"></script>
-  <title>Generate SQL Script</title>
-</head>
-
-<body ng-app="genSQLCode">
-  <div ng-controller="checkCtrl" ng-init="testLogin()">
-  </div>
-  <div ng-controller="databaseCtrl">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary fixed-top">
-      <div class="container">
-        <a class="navbar-brand" href="https://www.facebook.com/Boruto.Uzumaki.8299">{{developer}} &copy;</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-          aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="GenSQLDB.html?txtUser={{accInfo.username}}&txtPass={{accInfo.pass}}">Tạo
-                Database
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="GenSQLTables.html?txtUser={{accInfo.username}}&txtPass={{accInfo.pass}}">Tạo
-                Table</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Tạo Stored Procedure</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Tạo Trigger</a>
-            </li>
-          </ul>
+<div ng-controller="databaseCtrl">
+  <div class="container">
+    <h2 class="my-3 text-center">Tool tự tạo SQL Query</h2>
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card text-white bg-dark h-100">
+          <div class="card-body">
+            <h5 class="card-title">Tùy chỉnh Database:</h5>
+            <div class="form-group">
+              <label for="DBName">Nhập tên Database:
+                <input type="text" class="form-control" id="DBName" ng-model="dbInfo.dbName">
+              </label>
+            </div>
+            <div class="form-group">
+              Tạo Primary
+              <label class="switch">
+                <input type="checkbox" id="cb_Primary" ng-model="createPrimary">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="form-group">
+              Tạo FileGroup
+              <label class="switch">
+                <input type="checkbox" id="cb_FileGroup" ng-model="createFilegroup">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="form-group">
+              Tạo Log
+              <label class="switch">
+                <input type="checkbox" id="cb_Log" ng-model="createLog">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <button type="button" class="btn btn-sm btn-light" id="copyButton" ng-hide="!validated()">Copy to
+              clipboard</button>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+          </div>
         </div>
+        <!-- </div> -->
       </div>
-    </nav>
-    
-    <div class="container">
-      <h2 class="my-3 text-center">Tool tự tạo SQL Query</h2>
-      <div class="row">
-        <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card text-white bg-dark h-100">
-            <div class="card-body">
-              <h5 class="card-title">Tùy chỉnh Database:</h5>
-              <div class="form-group">
-                <label for="DBName">Nhập tên Database:
-                  <input type="text" class="form-control" id="DBName" ng-model="dbInfo.dbName">
-                </label>
-              </div>
-              <div class="form-group">
-                Tạo Primary
-                <label class="switch">
-                  <input type="checkbox" id="cb_Primary" ng-model="createPrimary">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <div class="form-group">
-                Tạo FileGroup
-                <label class="switch">
-                  <input type="checkbox" id="cb_FileGroup" ng-model="createFilegroup">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <div class="form-group">
-                Tạo Log
-                <label class="switch">
-                  <input type="checkbox" id="cb_Log" ng-model="createLog">
-                  <span class="slider round"></span>
-                </label>
-              </div>
-              <button type="button" class="btn btn-sm btn-light" id="copyButton" ng-hide="!validated()">Copy to
-                clipboard</button>
+
+      <div class="col-lg-3 col-md-6 mb-4" ng-if="createPrimary">
+        <div class="card text-white bg-secondary h-100">
+          <div class="card-body">
+            <h5 class="card-title">Tùy chỉnh Primary:</h5>
+            <div class="form-group">
+              <label for="Primary">Nhập tên Primary:
+                <input type="text" class="form-control" id="Primary" ng-model="dbInfo.primaryInfo.primaryName">
+              </label>
             </div>
-            <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+            <div class="form-group">
+              <label for="Size">Nhập Size:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.primaryInfo.primarySizeType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Pr_Size"
+                    ng-model="dbInfo.primaryInfo.primarySize">
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="MaxSize">Nhập Max Size:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.primaryInfo.primaryMaxSizeType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Pr_MaxSize"
+                    ng-model="dbInfo.primaryInfo.primaryMaxSize">
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="SizeGrowth">Nhập Growth:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.primaryInfo.primaryGrowthType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Pr_SizeGrowth"
+                    ng-model="dbInfo.primaryInfo.primaryGrowth">
+                </div>
+              </label>
             </div>
           </div>
-          <!-- </div> -->
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4" ng-if="createPrimary">
-          <div class="card text-white bg-secondary h-100">
-            <div class="card-body">
-              <h5 class="card-title">Tùy chỉnh Primary:</h5>
-              <div class="form-group">
-                <label for="Primary">Nhập tên Primary:
-                  <input type="text" class="form-control" id="Primary" ng-model="dbInfo.primaryInfo.primaryName">
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="Size">Nhập Size:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.primaryInfo.primarySizeType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Pr_Size"
-                      ng-model="dbInfo.primaryInfo.primarySize">
-                  </div>
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="MaxSize">Nhập Max Size:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.primaryInfo.primaryMaxSizeType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Pr_MaxSize"
-                      ng-model="dbInfo.primaryInfo.primaryMaxSize">
-                  </div>
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="SizeGrowth">Nhập Growth:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.primaryInfo.primaryGrowthType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Pr_SizeGrowth"
-                      ng-model="dbInfo.primaryInfo.primaryGrowth">
-                  </div>
-                </label>
-              </div>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4" ng-if="createFilegroup">
-          <div class="card text-white bg-secondary h-100">
-            <div class="card-body">
-              <h5 class="card-title">Tùy chỉnh FileGroup</h5>
-              <div class="form-group">
-                <label for="Primary">Nhập tên FileGroup:
-                  <input type="text" class="form-control" id="Fg_Primary" ng-model="dbInfo.filegroupInfo.filegroupName">
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="Size">Nhập Size:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupSizeType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Fg_Size"
-                      ng-model="dbInfo.filegroupInfo.filegroupSize">
-                  </div>
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="MaxSize">Nhập Max Size:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupMaxSizeType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Fg_MaxSize"
-                      ng-model="dbInfo.filegroupInfo.filegroupMaxSize">
-                  </div>
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="SizeGrowth">Nhập Growth:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupGrowthType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Fg_SizeGrowth"
-                      ng-model="dbInfo.filegroupInfo.filegroupGrowth">
-                  </div>
-                </label>
-              </div>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4" ng-if="createLog">
-          <div class="card text-white bg-secondary h-100">
-            <div class="card-body">
-              <h5 class="card-title">Tùy chỉnh Log:</h5>
-              <div class="form-group">
-                <label class="form-control-label" for="Primary">Nhập tên Log:
-                  <input type="text" class="form-control" id="Lg_Primary" ng-model="dbInfo.logInfo.logName">
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="Size">Nhập Size:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Lg_Size" ng-model="dbInfo.logInfo.logSize">
-                  </div>
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="MaxSize">Nhập Max Size:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Lg_MaxSize"
-                      ng-model="dbInfo.logInfo.logMaxSize">
-                  </div>
-                </label>
-              </div>
-              <div class="form-group">
-                <label for="SizeGrowth">Nhập Growth:
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType"
-                        ng-options="option for option in typeStorage">
-                      </select>
-                    </div>
-                    <input type="number" min="1" class="form-control" id="Lg_SizeGrowth"
-                      ng-model="dbInfo.logInfo.logGrowth">
-                  </div>
-                </label>
-              </div>
-            </div>
-            <div class="card-footer">
-              <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
-            </div>
+          <div class="card-footer">
+            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
           </div>
         </div>
       </div>
-      <!-- ng-if="validated()" -->
-      <div class="row" ng-if="!validated()">
-        <div class="col-lg-12 col-md-6 mb-4">
-          <h4 class="text-danger my-3">
-            Vui lòng điền đầy đủ thông tin ở các bảng, code sẽ tự động được tạo
-          </h4>
+
+      <div class="col-lg-3 col-md-6 mb-4" ng-if="createFilegroup">
+        <div class="card text-white bg-secondary h-100">
+          <div class="card-body">
+            <h5 class="card-title">Tùy chỉnh FileGroup</h5>
+            <div class="form-group">
+              <label for="Primary">Nhập tên FileGroup:
+                <input type="text" class="form-control" id="Fg_Primary" ng-model="dbInfo.filegroupInfo.filegroupName">
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="Size">Nhập Size:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupSizeType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Fg_Size"
+                    ng-model="dbInfo.filegroupInfo.filegroupSize">
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="MaxSize">Nhập Max Size:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupMaxSizeType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Fg_MaxSize"
+                    ng-model="dbInfo.filegroupInfo.filegroupMaxSize">
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="SizeGrowth">Nhập Growth:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.filegroupInfo.filegroupGrowthType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Fg_SizeGrowth"
+                    ng-model="dbInfo.filegroupInfo.filegroupGrowth">
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
+          </div>
         </div>
       </div>
-      <div class="row" ng-if="validated()">
-        <div class="col-lg-12 col-md-6 mb-4">
-          <div class="form-group">
-            <h4 class="text-primary my-3" for="codeSQL">CodeSQL:</h4>
-            <textarea readonly class="form-control" style="width: 100%" rows="25" id="code">{{genCode()}}</textarea>
+
+      <div class="col-lg-3 col-md-6 mb-4" ng-if="createLog">
+        <div class="card text-white bg-secondary h-100">
+          <div class="card-body">
+            <h5 class="card-title">Tùy chỉnh Log:</h5>
+            <div class="form-group">
+              <label class="form-control-label" for="Primary">Nhập tên Log:
+                <input type="text" class="form-control" id="Lg_Primary" ng-model="dbInfo.logInfo.logName">
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="Size">Nhập Size:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Lg_Size" ng-model="dbInfo.logInfo.logSize">
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="MaxSize">Nhập Max Size:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Lg_MaxSize"
+                    ng-model="dbInfo.logInfo.logMaxSize">
+                </div>
+              </label>
+            </div>
+            <div class="form-group">
+              <label for="SizeGrowth">Nhập Growth:
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <select class="custom-select" ng-model="dbInfo.logInfo.logGrowthType"
+                      ng-options="option for option in typeStorage">
+                    </select>
+                  </div>
+                  <input type="number" min="1" class="form-control" id="Lg_SizeGrowth"
+                    ng-model="dbInfo.logInfo.logGrowth">
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">&#9733; &#9733; &#9733; &#9733; &#9734;</small>
           </div>
         </div>
       </div>
     </div>
+    <!-- ng-if="validated()" -->
+    <div class="row" ng-if="!validated()">
+      <div class="col-lg-12 col-md-6 mb-4">
+        <h4 class="text-danger my-3">
+          Vui lòng điền đầy đủ thông tin ở các bảng, code sẽ tự động được tạo
+        </h4>
+      </div>
+    </div>
+    <div class="row" ng-if="validated()">
+      <div class="col-lg-12 col-md-6 mb-4">
+        <div class="form-group">
+          <h4 class="text-primary my-3" for="codeSQL">CodeSQL:</h4>
+          <textarea readonly class="form-control" style="width: 100%" rows="25" id="code">{{genCode()}}</textarea>
+        </div>
+      </div>
+    </div>
   </div>
-</body>
-
-</html>
+</div>
+<script src="js/controller/databaseCtrl.js"></script>
